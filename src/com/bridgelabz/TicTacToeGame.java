@@ -53,7 +53,7 @@ public class TicTacToeGame {
     public static void main(String[] args) {
         System.out.println("*** Welcome to Tic Tac Toe Game ***");
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the Player Name : ");
+        System.out.println("Enter the Player Name : ");
         String playerName = scanner.nextLine();
 //UC1:
         TicTacToeGame ticTacToeGame = new TicTacToeGame();
