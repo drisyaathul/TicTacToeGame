@@ -54,6 +54,7 @@ public class TicTacToeGame {
         /*
          * User to make a move to a desired location in the board.
          * Select the index from 1 to 9 to make the move.
+         * Ensure the index is Free.
          */
         System.out.println("Enter the position where you want to make a move : ");
         int playerPosition = scanner.nextInt();
