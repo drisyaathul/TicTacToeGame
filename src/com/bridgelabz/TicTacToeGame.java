@@ -1,5 +1,6 @@
 package com.bridgelabz;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class TicTacToeGame {
@@ -68,6 +69,22 @@ public class TicTacToeGame {
         }else
             System.out.println("Invalid. Please Select the Valid Position");
     }
+    //UC6:
+    private void flipCoin(String playerName) {
+        /*
+         * Use Random to determine Heads or Tails and assign accordingly who starts first, the computer or the user.
+         */
+        System.out.println("-- Have a Toss to find who starts the Game --");
+        System.out.println("1. Head\n2. Tail");
+        System.out.println("Enter the User Option : ");
+        int userOption = scanner.nextInt();
+        System.out.println("Player is selected the Option. \nNow, Flip the Coin:");
+        int coin = (int) (Math.random()*3);
+        if (userOption == coin) {
+            System.out.println("Player won the Toss.\n"+playerName+" can start the Game.");
+        }else
+            System.out.println("Player Loss the Toss. \nComputer can start the Game.");
+    }
 
     public static void main(String[] args) {
         System.out.println("*** Welcome to Tic Tac Toe Game ***");
@@ -82,6 +99,8 @@ public class TicTacToeGame {
          */
         char[] board = new char[10];
         board = ticTacToeGame.CreateEmptyBoard(board);
+//UC6:
+        ticTacToeGame.flipCoin(playerName);
 //UC2:
         /*
          * Player and Computer to choose a letter X or O
