@@ -118,6 +118,7 @@ public class TicTacToeGame {
                     ticTacToeGame.findUserLocation(playerLetter,board);
                     break;
                 case 2:
+                    //UC5: To check if the free space is available for the move.
                     ticTacToeGame.showBoard(board);
                     break;
                 case 3:
