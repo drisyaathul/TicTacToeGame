@@ -40,12 +40,11 @@ public class TicTacToeGame {
                 System.out.println(playerName + " is playing now");
                 ticTacToeGame.userGamePlay(playerSymbol, board);
                 player1Turn = false;
-            }else {
+            } else {
                 System.out.println("Computer is playing now");
-                ticTacToeGame.computerGamePlay(computerSymbol,board);
+                ticTacToeGame.computersGamePlay(computerSymbol, board);
                 player1Turn = true;
             }
-
             // checks whether player 1 has won or player 2
             if (ticTacToeGame.playerHasWon(board) == playerSymbol) {
                 System.out.println(playerName + " has won the game ");
@@ -55,7 +54,6 @@ public class TicTacToeGame {
                 System.out.println("Computer has won the game ");
                 flag = false;
             }
-
             // if neither player 1 then its a tie so checks board is full
             if (ticTacToeGame.boardIsFull(board)) {
                 System.out.println("Its a Tie !!!");
@@ -64,25 +62,34 @@ public class TicTacToeGame {
         } while (flag);
 
     }
-
     public void userGamePlay(char playerSymbol, char[] board) {
         // UC5 Problem - User can check position is available or not by viewing board
-        showBoard(board);
-        getUserPosition(playerSymbol, board);
-        showBoard(board);
+        ticTacToeGame.showBoard(board);
+        ticTacToeGame.getUserPosition(playerSymbol, board);
+        ticTacToeGame.showBoard(board);
     }
-    public void computerGamePlay(char playerSymbol, char[] board) {
-        // UC5 Problem - User can check position is available or not by viewing board
-        showBoard(board);
-        getUserPosition(playerSymbol, board);
-        showBoard(board);
+
+    // UC8- Problem Solved Allowing computer to play game
+    private void computersGamePlay(char computerSymbol, char[] board) {
+
+        int i = 1;
+        while (i < 10) {
+            int randomPosition = ThreadLocalRandom.current().nextInt(1, 10);
+            if (board[randomPosition] == '_') {
+                board[randomPosition] = computerSymbol;
+                break;
+            }
+            i++;
+        }
+        //System.out.println("Computer has made its move !!!");
     }
+
     // UC6 Problem - Flipping Coin to determine who will start first
     private boolean flipCoin(String player1Name) {
 
         System.out.println("Lets have a toss !!! \n" + player1Name + " Please make a call,Press 1 for Heads or 0 for Tails");
         int userCall = scanner.nextInt();
-        int coinResult = (int) (Math.floor(Math.random() * 10)%2);
+        int coinResult = (int) (Math.floor(Math.random() * 10) % 2);
         if (coinResult == userCall) {
             System.out.println("Congrats!!! You won the toss \n" + player1Name + " will Play first");
             return true;
@@ -102,11 +109,13 @@ public class TicTacToeGame {
                 board[i] = ' ';
             }
         }
+        System.out.println("Currently No one is Playing");
         return board;
     }
 
     //UC2 Problem - taking input from user to choose either X or O
     public char chooseLetter(String player1Name) {
+
         System.out.println(player1Name + " Please select letter either 'X' or 'O' ");
         char symbol = scanner.next().charAt(0);
         if (symbol == 'X' || symbol == 'O') {
@@ -120,6 +129,7 @@ public class TicTacToeGame {
 
     // UC3 Problem - Prints Tic Tac Toe board on console
     public void showBoard(char[] board) {
+
         System.out.println("Current Board looks like : \n");
         int i = 1;
         while (i < 10) {
@@ -136,9 +146,9 @@ public class TicTacToeGame {
         int playerPosition = scanner.nextInt();
 
         if (playerPosition > 0 && playerPosition < 10) {
-            if (board[playerPosition] == '_') {
+            if (board[playerPosition] == '_')
                 board[playerPosition] = playerSymbol;
-            }else {
+            else {
                 System.out.println("SORRY !!! Position is already Occupied by someone else");
                 getUserPosition(playerSymbol,board);
             }
@@ -150,6 +160,7 @@ public class TicTacToeGame {
 
     // UC7 Problem - Checks if any of the player has won the game
     public char playerHasWon(char[] board) {
+
         int i = 1;
         // checks for row
         while (i < 10) {
@@ -177,6 +188,7 @@ public class TicTacToeGame {
 
     // Checks whether board is full or not
     public boolean boardIsFull(char[] board) {
+
         int i = 1;
         while (i < 10) {
             if (board[i] == '_')
