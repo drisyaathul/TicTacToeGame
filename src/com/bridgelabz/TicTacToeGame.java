@@ -40,6 +40,10 @@ public class TicTacToeGame {
                 System.out.println(playerName + " is playing now");
                 ticTacToeGame.userGamePlay(playerSymbol, board);
                 player1Turn = false;
+            }else {
+                System.out.println("Computer is playing now");
+                ticTacToeGame.computerGamePlay(computerSymbol,board);
+                player1Turn = true;
             }
 
             // checks whether player 1 has won or player 2
@@ -67,24 +71,30 @@ public class TicTacToeGame {
         getUserPosition(playerSymbol, board);
         showBoard(board);
     }
-
+    public void computerGamePlay(char playerSymbol, char[] board) {
+        // UC5 Problem - User can check position is available or not by viewing board
+        showBoard(board);
+        getUserPosition(playerSymbol, board);
+        showBoard(board);
+    }
     // UC6 Problem - Flipping Coin to determine who will start first
     private boolean flipCoin(String player1Name) {
+
         System.out.println("Lets have a toss !!! \n" + player1Name + " Please make a call,Press 1 for Heads or 0 for Tails");
         int userCall = scanner.nextInt();
-        int coinResult = (int) (Math.floor(Math.random() * 10) % 2);
+        int coinResult = (int) (Math.floor(Math.random() * 10)%2);
         if (coinResult == userCall) {
             System.out.println("Congrats!!! You won the toss \n" + player1Name + " will Play first");
             return true;
         } else {
             System.out.println("OOPS !!! You loss the toss \nComputer will Play first");
-            flipCoin(player1Name);
             return false;
         }
     }
 
-    //UC1 Problem - creating empty tic tac toe board
+    //UC1 Problem - creating empty tictactoe board
     public char[] creatingEmptyBoard(char[] board) {
+
         for (int i = 0; i < 10; i++) {
             if (i == 0) {
                 continue;
@@ -92,7 +102,6 @@ public class TicTacToeGame {
                 board[i] = ' ';
             }
         }
-        System.out.println("Currently No one is Playing");
         return board;
     }
 
