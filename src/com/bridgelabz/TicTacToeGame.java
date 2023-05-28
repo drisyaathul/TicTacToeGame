@@ -1,149 +1,183 @@
 package com.bridgelabz;
 
-import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TicTacToeGame {
-    Scanner scanner = new Scanner(System.in);
-    //UC1:
-    public char[] CreateEmptyBoard(char[] board) {
-        /*
-         * 0th index is ignored to make it user-friendly.
-         * Assign Empty space to each Element.
-         */
-        for (int i=0; i < 10; i++) {
+
+    static Scanner scanner = new Scanner(System.in);
+    static TicTacToeGame ticTacToeGame = new TicTacToeGame();
+
+    // main method
+    public static void main(String[] args) {
+        System.out.println("Welcome to Tic Tac Toe Game !!! :)");
+        System.out.println("Please Enter Your name : ");
+        String playerName = scanner.nextLine();
+        char[] board = new char[10];
+        board = ticTacToeGame.creatingEmptyBoard(board);
+
+        char playerSymbol = ticTacToeGame.chooseLetter(playerName);
+        char computerSymbol;
+        if (playerSymbol == 'X')
+            computerSymbol = 'O';
+        else
+            computerSymbol = 'X';
+
+        System.out.println(playerName + "'s Symbol is : " + playerSymbol);
+        System.out.println("Computer's Symbol is : " + computerSymbol);
+
+        for (int i = 1; i < 10; i++) {
+            // to make board visible on console
+            board[i] = '_';
+        }
+        boolean player1Turn = ticTacToeGame.flipCoin(playerName);
+
+        boolean flag = true;
+        // checks whose turn it is and accordingly runs the loop
+        do {
+            // it alternates the turn of player 1 and player 2
+            if (player1Turn) {
+                System.out.println(playerName + " is playing now");
+                ticTacToeGame.userGamePlay(playerSymbol, board);
+                player1Turn = false;
+            }
+
+            // checks whether player 1 has won or player 2
+            if (ticTacToeGame.playerHasWon(board) == playerSymbol) {
+                System.out.println(playerName + " has won the game ");
+                flag = false;
+            }
+            if (ticTacToeGame.playerHasWon(board) == computerSymbol) {
+                System.out.println("Computer has won the game ");
+                flag = false;
+            }
+
+            // if neither player 1 then its a tie so checks board is full
+            if (ticTacToeGame.boardIsFull(board)) {
+                System.out.println("Its a Tie !!!");
+                flag = false;
+            }
+        } while (flag);
+
+    }
+
+    public void userGamePlay(char playerSymbol, char[] board) {
+        // UC5 Problem - User can check position is available or not by viewing board
+        showBoard(board);
+        getUserPosition(playerSymbol, board);
+        showBoard(board);
+    }
+
+    // UC6 Problem - Flipping Coin to determine who will start first
+    private boolean flipCoin(String player1Name) {
+        System.out.println("Lets have a toss !!! \n" + player1Name + " Please make a call,Press 1 for Heads or 0 for Tails");
+        int userCall = scanner.nextInt();
+        int coinResult = (int) (Math.floor(Math.random() * 10) % 2);
+        if (coinResult == userCall) {
+            System.out.println("Congrats!!! You won the toss \n" + player1Name + " will Play first");
+            return true;
+        } else {
+            System.out.println("OOPS !!! You loss the toss \nComputer will Play first");
+            flipCoin(player1Name);
+            return false;
+        }
+    }
+
+    //UC1 Problem - creating empty tic tac toe board
+    public char[] creatingEmptyBoard(char[] board) {
+        for (int i = 0; i < 10; i++) {
             if (i == 0) {
                 continue;
-            }else {
+            } else {
                 board[i] = ' ';
             }
         }
+        System.out.println("Currently No one is Playing");
         return board;
     }
-    //UC2:
-    public char chooseLetter() {
-        /*
-          * Taking input from User to choose either 'X' or 'O'.
-         */
-        System.out.println("Choose the Letter 'X' or 'O' :-");
-        char letter = scanner.next().charAt(0);
-        if (letter == 'X' || letter =='O') {
-            System.out.println("Player Selected the Letter.");
-        }else {
-            System.out.println("Invalid Input");
-            letter = chooseLetter();
+
+    //UC2 Problem - taking input from user to choose either X or O
+    public char chooseLetter(String player1Name) {
+        System.out.println(player1Name + " Please select letter either 'X' or 'O' ");
+        char symbol = scanner.next().charAt(0);
+        if (symbol == 'X' || symbol == 'O') {
+            System.out.println("You selected the letter !!!");
+        } else {
+            System.out.println("Invalid Input !!!");
+            symbol = chooseLetter(player1Name);
         }
-        return letter;
+        return symbol;
     }
-    //UC3:
+
+    // UC3 Problem - Prints Tic Tac Toe board on console
     public void showBoard(char[] board) {
-        /*
-          * Player would like to see the board so player can choose the valid cells to make
-            their move during player turn.
-          * Display the board on Console
-         */
-        System.out.println("Display the Current Board :-");
-        int i=1;
+        System.out.println("Current Board looks like : \n");
+        int i = 1;
         while (i < 10) {
-            System.out.println(board[i]+" "+board[i+1]+" "+board[i+2]);
-            i = i+3;
+            System.out.println(board[i] + " " + board[i + 1] + " " + board[i + 2]);
+            i = i + 3;
         }
         System.out.println();
     }
-    //UC4:
-    public void findUserLocation(char playerLetter, char[] board) {
-        /*
-         * User to make a move to a desired location in the board.
-         * Select the index from 1 to 9 to make the move.
-         * Ensure the index is Free.
-         */
+
+    // UC4 Problem - ability to make move to desired position and ensures index is free
+    public void getUserPosition(char playerSymbol, char[] board) {
+
         System.out.println("Enter the position where you want to make a move : ");
         int playerPosition = scanner.nextInt();
 
         if (playerPosition > 0 && playerPosition < 10) {
-            if (board[playerPosition] == '_' ) {
-                board[playerPosition] = playerLetter;
+            if (board[playerPosition] == '_') {
+                board[playerPosition] = playerSymbol;
             }else {
-                System.out.println("Position is Already Occupied !!");
+                System.out.println("SORRY !!! Position is already Occupied by someone else");
+                getUserPosition(playerSymbol,board);
             }
-        }else
-            System.out.println("Invalid. Please Select the Valid Position");
-    }
-    //UC6:
-    private void flipCoin(String playerName) {
-        /*
-         * Use Random to determine Heads or Tails and assign accordingly who starts first, the computer or the user.
-         */
-        System.out.println("-- Have a Toss to find who starts the Game --");
-        System.out.println("1. Head\n2. Tail");
-        System.out.println("Enter the User Option : ");
-        int userOption = scanner.nextInt();
-        System.out.println("Player is selected the Option. \nNow, Flip the Coin:");
-        int coin = (int) (Math.random()*3);
-        if (userOption == coin) {
-            System.out.println("Player won the Toss.\n"+playerName+" can start the Game.");
-        }else
-            System.out.println("Player Loss the Toss. \nComputer can start the Game.");
+        } else {
+            System.out.println("Position is out of bond,Please select valid position");
+            getUserPosition(playerSymbol,board);
+        }
     }
 
-    public static void main(String[] args) {
-        System.out.println("*** Welcome to Tic Tac Toe Game ***");
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the Player Name : ");
-        String playerName = scanner.nextLine();
-//UC1:
-        TicTacToeGame ticTacToeGame = new TicTacToeGame();
-        /*
-         * Create a board of char[] of size 10 and
-         * Create empty board.
-         */
-        char[] board = new char[10];
-        board = ticTacToeGame.CreateEmptyBoard(board);
-//UC6:
-        ticTacToeGame.flipCoin(playerName);
-//UC2:
-        /*
-         * Player and Computer to choose a letter X or O
-         */
-        char playerLetter = ticTacToeGame.chooseLetter();
-        char computerLetter;
-        if (playerLetter == 'X')
-            computerLetter = 'O';
-        else
-            computerLetter = 'X';
-        System.out.println(playerName+ "'s Letter is "+playerLetter);
-        System.out.println("Computer Player's Letter is "+computerLetter);
-//UC3:
-        /*
-          Method of Show Board
-         */
-        for (int i=0; i<10; i++) {
-            if (i != 0)
-                board[i] = '_';
+    // UC7 Problem - Checks if any of the player has won the game
+    public char playerHasWon(char[] board) {
+        int i = 1;
+        // checks for row
+        while (i < 10) {
+            if (board[i] == board[i + 1] && board[i + 1] == board[i + 2] && board[i] != '_') {
+                return board[i];
+            }
+            i = i + 3;
         }
-//UC4:
-        /*
-         * Using Switch Case ,we can select the options given below.
-         * call method to find the Player position on board.
-         */
-        boolean flag = true;
-        while (flag) {
-            System.out.println("---Select the below options---");
-            System.out.println("1.  To Continue the Game \n2.  To view the Current Board \n3.  Quit the Game");
-            System.out.println("Enter the option : ");
-            int option = scanner.nextInt();
-            switch (option){
-                case 1:
-                    ticTacToeGame.findUserLocation(playerLetter,board);
-                    break;
-                case 2:
-                    //UC5: To check if the free space is available for the move.
-                    ticTacToeGame.showBoard(board);
-                    break;
-                case 3:
-                    flag = false;
-                    break;
+
+        // checks for column
+        while (i < 10) {
+            if (board[i] == board[i + 3] && board[i + 3] == board[i + 6] && board[i] != '_') {
+                return board[i];
             }
         }
+        // checks for diagonals
+        if (board[1] == board[5] && board[5] == board[9] && board[1] != '_')
+            return board[1];
+        if (board[3] == board[5] && board[5] == board[7] && board[3] != '_')
+            return board[3];
+
+        //if neither is equal it returns this
+        return ' ';
     }
+
+    // Checks whether board is full or not
+    public boolean boardIsFull(char[] board) {
+        int i = 1;
+        while (i < 10) {
+            if (board[i] == '_')
+                return false;
+        }
+        return true;
+    }
+
 }
+
+
+
+
